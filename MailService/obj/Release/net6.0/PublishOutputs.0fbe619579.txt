@@ -1,0 +1,11 @@
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\HKBlog.MailService.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\HKBlog.MailService.deps.json
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\HKBlog.MailService.pdb
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\MailKit.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\Microsoft.Extensions.DependencyInjection.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\MimeKit.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\NETCore.MailKit.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\BouncyCastle.Crypto.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\System.Security.Cryptography.Pkcs.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\publish\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll

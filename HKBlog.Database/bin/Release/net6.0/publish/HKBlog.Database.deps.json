@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "HKBlog.Database/1.0.0": {
+        "dependencies": {
+          "DBreeze": "1.107.0"
+        },
+        "runtime": {
+          "HKBlog.Database.dll": {}
+        }
+      },
+      "DBreeze/1.107.0": {
+        "runtime": {
+          "lib/net6.0/DBreeze.dll": {
+            "assemblyVersion": "1.107.2021.1222",
+            "fileVersion": "1.107.2021.1222"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HKBlog.Database/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "DBreeze/1.107.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-yyay0tv6tEaUV0ReZP1kkVOYPywk0/DwTHVztwLW4vcfhdCY1MlXPu5u56wE3nNa9ALrbbTJ24zPHHMfRzRIlQ==",
+      "path": "dbreeze/1.107.0",
+      "hashPath": "dbreeze.1.107.0.nupkg.sha512"
+    }
+  }
+}

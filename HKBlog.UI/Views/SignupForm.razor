@@ -1,0 +1,107 @@
+﻿@inject IUserController userController
+@inject IStore store
+@implements IDisposable
+
+<em class="error">@message</em>
+@if (!isForgottenPassword)
+{
+    <EditForm Model="user" OnValidSubmit="Login">
+        <h3>Login</h3>
+        <InputText @bind-Value="user.Email" @onblur="(() => IsValidEmail(user.Email))" type="email" placeholder="enter your valid email" class="box"></InputText>
+        <InputText @bind-Value="user.Password" type="password" placeholder="enter strong password" class="box"></InputText>
+        <p>forgotten password? <span @onclick="ForgottenPass">click here</span></p>
+        <button type="submit" class="btn">Submit</button>
+    </EditForm>
+}
+else
+{
+    <div>
+        <div class="forgotten-pass">
+            <p>forgotten password? Enter your registered mail ...</p>
+            <input @bind="forgottenEmail" @onblur="(() => ValidateForgottenEmail(forgottenEmail))" type="email" placeholder="We'll send you a mail" class="box" />
+            <input @bind="forgottenMailOTP" @onblur="(() => CheckOTP(forgottenMailOTP,forgottenEmail))" placeholder="4 - digits Authentication Pin" class="box" />
+            <button @onclick="SendForgottenEmail" type="button" class="btn">Submit</button>
+        </div>
+        <p>back to login form <span @onclick="ForgottenPass">click here</span></p>
+    </div>
+}
+
+@code {
+    public User user { get; set; } = new();
+    private bool isForgottenPassword { get; set; }
+    public string forgottenEmail { get; set; } = string.Empty;
+    public int forgottenMailOTP { get; set; }
+    private bool isEmailvalid { get; set; }
+    private bool isEmailOTPValid { get; set; }
+    private string message = "";
+
+    protected override void OnInitialized()
+    {
+        store.AddStateChangedListeners(() => { StateHasChanged(); });
+    }
+    public void Dispose()
+    {
+        store.RemoveStateChangedListeners(() => { StateHasChanged(); });
+    }
+
+    private void SendForgottenEmail()
+    {
+
+        if (isEmailOTPValid)
+        {
+            userController.SendUsersPassword(forgottenEmail);
+            message = "Check your mail for retrieved password!";
+            //close form using state manager
+            store.LoginClick(false);
+        }
+    }
+    private void ForgottenPass()
+    {
+        this.isForgottenPassword = !this.isForgottenPassword;
+    }
+    private void Login()
+    {
+        if (this.isEmailvalid)
+        {
+            var u = user;
+            var loggedUser = userController.LoginUser(u.Email, u.Password).Result;
+            
+            //Add this to state user and close form
+            store.LoginClick(false);
+            store.AddActiveUser(loggedUser);
+        }
+    }
+    private void CheckOTP(int otp, string email)
+    {
+        this.isEmailOTPValid = userController.IsEmailOTP(otp, email).Result;
+        if (!isEmailOTPValid)
+        {
+            message = "OTP is invalid or expired.";
+        }
+    }
+    private bool IsValidEmail(string email)
+    {
+        string pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
+        Regex regex = new Regex(pattern);
+        this.isEmailvalid = regex.IsMatch(email);
+        if (!this.isEmailvalid)
+        {
+            this.message = "email field is invalid, email must be in the form abc@xyz.com";
+        }
+        return regex.IsMatch(email);
+    }
+    private void ValidateForgottenEmail(string email)
+    {
+        var isvalid = IsValidEmail(email);
+        if (isvalid)
+        {
+            userController.GetAndMailOTP(email);
+            this.message = "complete form with most recent OTP sent to input email";
+        }
+        else
+        {
+            this.message = "email field is invalid, email must be in the form abc@xyz.com";
+        }
+    }
+}
+

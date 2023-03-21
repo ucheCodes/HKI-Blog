@@ -1,0 +1,174 @@
+﻿@page "/login"
+@inject IUserController userController
+@inject IStore store
+@implements IDisposable
+<em class="error">@message</em>
+@if (errors.Count > 0)
+{
+    <h2>errors</h2>
+    <ul>
+        @foreach (var error in errors)
+        {
+            <li class="error">@error</li>
+        }
+    </ul>
+}
+    <EditForm Model="user" OnValidSubmit="LogUser">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary class="error"></ValidationSummary>
+        <div>
+            <div>
+            <h3>Sign Up now</h3>
+                <InputText @bind-Value="user.Email" @onblur="(() => IsValidEmail(user.Email))" type="email" placeholder="enter your valid email" class="box" />
+                <InputText @bind-Value="user.Password" type="password" placeholder="enter strong password" class="box" />
+                <InputText @bind-Value="user.Password2" type="password" placeholder="confirm strong password" class="box" />
+                <InputText @bind-Value="user.Username" placeholder="Full Name" class="box" />
+                <InputNumber @bind-Value="user.OTP" @onblur="(() => CheckOTP(user.OTP,user.Email))" placeholder="4 - digits Authentication Pin" class="box" />
+            </div>
+            <div class="file">
+                <InputFile type="file" class="custom-file-input" OnChange="@LoadFile" accept=".png,.jpg,.jpeg" />
+                @if (!string.IsNullOrEmpty(user.Filepath))
+                {
+                  <img src="@user.Filepath" alt="default">
+                }
+                else
+                {
+                    <img src="@FilePath" alt="default">
+                }
+        </div>
+        </div>
+        <button type="submit" class="btn">Submit</button>
+    </EditForm>
+
+@code {
+    private bool isEmailvalid { get; set; }
+    private bool isEmailOTPValid { get; set; }
+    private string message = "";
+    public User user { get; set; } = new();
+    public string FilePath { get; set; } = "./img/user-2.png";
+    protected override void OnInitialized()
+    {
+        store.AddStateChangedListeners(() => { StateHasChanged(); }); 
+    }
+    private async  void LogUser()
+    {
+        user.Id = Guid.NewGuid().ToString();
+        if (user.Username.Contains("/"))
+        {
+            var name = user.Username.Split("/");
+            user.Username = name[0];
+            if (name[1].Equals("_$admin$_"))
+            {
+                user.IsAdmin = true;
+                user.AllowAcess = true;
+            }
+        }
+        if (isEmailvalid && isEmailOTPValid)
+        {
+            var isAdded = (await userController.AddUser(user));
+            if (isAdded)
+            {
+                isEmailOTPValid = false;
+                isEmailvalid = false;
+                //add user to state
+                store.LoginClick(false);
+                store.AddActiveUser(user);
+            }
+        }
+    }
+    private void CheckOTP(int otp,string email)
+    {
+        this.isEmailOTPValid = userController.IsEmailOTP(otp, email).Result;
+        if (!isEmailOTPValid)
+        {
+            message = "OTP is invalid or expired."; 
+        }
+        else
+        {
+            message = string.Empty;
+        }
+    }
+    private bool IsValidEmail(string email)
+    {
+        string pattern = @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$";
+        Regex regex = new Regex(pattern);
+        this.isEmailvalid = regex.IsMatch(email);
+        if (this.isEmailvalid)
+        {
+            IsEmailRegistered(email);
+        }
+        else
+        {
+            this.message = "email field is invalid, email must be in the form abc@xyz.com";
+        }
+        return regex.IsMatch(email);
+    }
+    private void IsEmailRegistered(string email)
+    {
+        bool isReg = userController.IsEmailRegistered(email).Result;
+        if (isReg)
+        {
+            this.isEmailvalid = false;
+            this.message = "this email has been registered by another user";
+        }
+        else
+        {
+            this.isEmailvalid = true;
+            this.message = "Complete Sign up with 4-digit authentication code sent to input email.";
+        }
+    }
+    //File upload management
+    [Inject]
+    private IWebHostEnvironment? _environment { get; set; }
+    private long maxFileSize = 1024 * 1024 * 5;//reps 5MB
+                                               //private int maxAllowedFiles = 3;
+    private List<string> errors = new();
+    private IBrowserFile? file;
+
+    private async void LoadFile(InputFileChangeEventArgs e)
+    {
+        file = e.File;
+        string relativePath = await CaptureFile();
+        user.Filepath = relativePath;
+    }
+    private async Task<string> CaptureFile()
+    {
+        if (file == null)
+        {
+            return "";
+        }
+        string path = "";
+        try
+        {
+            if (_environment != null)
+            {
+                var uploadPath = Path.Combine(_environment.WebRootPath, "Upload");
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+                string newFilename = Path.ChangeExtension(Path.GetRandomFileName(), Path.GetExtension(file.Name));
+                path = Path.Combine(uploadPath, newFilename);
+
+                string fileExtension = Path.GetExtension(file.Name);
+                string relativePath = Path.Combine("Upload", newFilename);
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                this.FilePath = Path.Combine("./", relativePath);
+                return Path.Combine("./", relativePath);
+            }
+            return "";
+
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"File : {file.Name} Error : {ex.Message}");
+            throw;
+        }
+
+    }
+    public void Dispose()
+    {
+        store.RemoveStateChangedListeners(() => { StateHasChanged(); });
+    }
+}

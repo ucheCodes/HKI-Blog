@@ -1,0 +1,15 @@
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\HKBlog.States.deps.json
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\HKBlog.States.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\HKBlog.States.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\HKBlog.Models.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.csproj.AssemblyReference.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.AssemblyInfoInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.AssemblyInfo.cs
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.csproj.CoreCompileInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.csproj.CopyComplete
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\refint\HKBlog.States.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\HKBlog.States.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\obj\Release\net6.0\ref\HKBlog.States.dll

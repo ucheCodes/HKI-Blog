@@ -1,0 +1,3 @@
+C:\Users\peter soft\source\repos\HKBlog\publish\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\publish\HKBlog.Models.deps.json
+C:\Users\peter soft\source\repos\HKBlog\publish\HKBlog.Models.pdb

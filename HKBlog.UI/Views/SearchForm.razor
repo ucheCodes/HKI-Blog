@@ -1,0 +1,12 @@
+﻿@inject NavigationManager navigationManager
+<input @bind="searchTerm" @onblur="Search" type="search" id="search-box" placeholder="search blog post ...">
+<label for="search-box" class="fas fa-search"></label>
+
+@code {
+    public string searchTerm { get; set; } = "";
+
+    private void Search()
+    {
+        navigationManager.NavigateTo("/blog");
+    }
+}

@@ -1,0 +1,126 @@
+﻿@page "/upload"
+@inject IPostController postController
+@inject NavigationManager navigationManager
+@if (errors.Count > 0)
+{
+    <h2>Image Upload errors</h2>
+    <ul>
+        @foreach (var error in errors)
+        {
+            <li class="error">@error</li>
+        }
+    </ul>
+}
+<section   class="uploads">
+    <h1 class="heading">Upload <span>Posts</span></h1>
+    <EditForm Model="post" OnValidSubmit="AddToBlog" class="form">
+        <div>
+            <label class="box">Choose an upload path</label>
+            <select @bind="post.PostOption" class="box">
+                <option value="blog" selected>Upload to Blog</option>
+                <option value="course">Upload to Courses</option>
+            </select>
+            <InputText @bind-Value="post.Title" type="text" placeholder="enter post title" class="box"/>
+            @if (post.PostOption == "course")
+            {
+                <InputNumber @bind-Value="post.Price" placeholder="enter amout for course in Naira" class="box" />
+            }
+            <div class="file">
+                <InputFile type="file" OnChange="@LoadFile" accept=".png,.jpg,.jpeg" class="custom-file-input"/>
+                @if (!string.IsNullOrEmpty(post.Filepath))
+                {
+                    <img src="@post.Filepath" alt="default">
+                }
+                else
+                {
+                    <img src="@FilePath" alt="default">
+                }
+            </div>
+    </div>
+    </EditForm>
+    <Editor ApiKey="lc0y2631rhpw976319zs6x60dzg9dpd9pvysbadgvaijxarn" @bind-Value=Body @bind:event="oninput" @Conf="@editorConf" />
+    <button @onclick="AddToBlog" type="submit" class="btn">Submit</button>
+</section>
+@code {
+    private string Body { get; set; } = string.Empty; 
+    private Post post = new();
+    private Dictionary<string, object> editorConf = new Dictionary<string, object>{
+        {"toolbar", "undo redo | bold italic | bullist numlist"},
+        {"width", 400}
+     };
+    protected override void OnInitialized()
+    {
+        post.PostOption = "blog";
+    }
+    private async void AddToBlog()
+    {
+        post.Id = Guid.NewGuid().ToString();
+        post.Date = DateTime.Now;
+        if (!string.IsNullOrEmpty(Body))
+        {
+            post.Body = Body;
+        }
+        if (post.PostOption == "course")
+        {
+            await postController.AddPostToDb(post);
+            navigationManager.NavigateTo("/courses");
+        }
+        else if (post.PostOption == "blog")
+        {
+            await postController.AddPostToDb(post);
+            navigationManager.NavigateTo("/blog");
+        }
+    }
+
+    //File upload management
+    [Inject]
+    private IWebHostEnvironment? _environment { get; set; }
+    private long maxFileSize = 1024 * 1024 * 5;//reps 5MB
+    public string FilePath { get; set; } = "./img/user-2.png"; //private int maxAllowedFiles = 3;
+    private List<string> errors = new();
+    private IBrowserFile? file;
+
+    private async void LoadFile(InputFileChangeEventArgs e)
+    {
+        file = e.File;
+        string relativePath = await CaptureFile();
+        post.Filepath = relativePath;
+    }
+    private async Task<string> CaptureFile()
+    {
+        if (file == null)
+        {
+            return "";
+        }
+        string path = "";
+        try
+        {
+            if (_environment != null)
+            {
+                var uploadPath = Path.Combine(_environment.WebRootPath, "Upload");
+                if (!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+                string newFilename = Path.ChangeExtension(Path.GetRandomFileName(), Path.GetExtension(file.Name));
+                path = Path.Combine(uploadPath, newFilename);
+
+                string fileExtension = Path.GetExtension(file.Name);
+                string relativePath = Path.Combine("Upload", newFilename);
+                await using FileStream fs = new(path, FileMode.Create);
+                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                this.FilePath = Path.Combine("./", relativePath);
+                return Path.Combine("./", relativePath);
+            }
+            return "";
+
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"File : {file.Name} Error : {ex.Message}");
+            throw;
+        }
+
+    }
+
+}

@@ -1,0 +1,158 @@
+﻿@page "/"
+@inject NavigationManager navManager
+@inject IPostController postController
+@inject IStore store
+
+<section class="home" id="home">
+    <div class="row">
+        <div class="col-2">
+            <h1>HELP KONSULT INTERNATIONAL</h1>
+            <p>
+                HELP is a key major player in business consulting and advisory services field within the
+                Nigeria & Africa regions;
+                bridging gaps between the management approaches and its actual implementation plans.
+                Our daily challenges are acquiring the most up-to-date knowledge in different management
+                functions as well as an up-to-date knowledge of the latest technologies
+                and utilizing this knowledge to maximize the value added services to our clients.
+                Persistently working toward continuous improvement, and stretching our potential,
+                we have succeeded in developing models and tools that serve to identify our clients specific requirements and cater to addressing them in the most effective and efficient manner. We believe that this represents our main competitive edge, and as such we strive
+                to constantly upgrade and fine-tune these methodologies to remain in line with local and regional business environments.
+            </p>
+            <button @onclick="Explore" class="btn">Explore</button>
+        </div>
+        <div class="col-2">
+            <div class="image">
+                <img class="img" src="/img/company.jpg" alt="services">
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="services">
+    <Services/>
+</section>
+
+@if (blogs.Count > 0)
+{
+    <section class="blogs" id="blogs">
+        <h1 class="heading"> Recent <span>posts</span></h1>
+        <div class="box-container">
+            @{
+                int count = 0;
+                foreach (var blog in blogs)
+                {
+                   if (count < 1)
+                {
+                    <div class="box">
+                        <div class="icons">
+                            <span><i class="fas fa-calendar"></i> @blog.Date.ToString("dd MMM yyyy") </span>
+                                <span><i class="fas fa-clock"></i>@blog.Date.ToString("hh : mm : ss tt")</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(blog.Filepath))
+                        {
+                            <div class="blog-img">
+                                <img src="@blog.Filepath" alt="blog-1">
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="blog-img">
+                              <img src="@FilePath" alt="blog-1">
+                            </div>
+                        }
+                        <div class="content">
+                            <h3>@blog.Title</h3>
+                            <button @onclick="(() => ViewBlog(blog.Id))" class="btn">Read</button>
+                        </div>
+                   </div>
+                    }
+                    count++;
+                }
+            }
+        </div>
+        <button class="btn" @onclick="Explore">See all &rarr;</button>
+    </section>
+}
+@{
+    int _count = 0;
+    if (Course.Count > 0)
+    {
+        <section class="courses" id="courses">
+            <h1 class="heading">Available <span>Courses</span></h1>
+            <div class="container">
+                @foreach (var course in Course)
+                {
+                    if (_count < 4)
+                    {
+                        <div @onclick="(() => ShowCourse(course.Id))" class="box">
+                            @if (!string.IsNullOrEmpty(course.Filepath))
+                            {
+                                <img src="@course.Filepath" alt="blog-1">
+                            }
+                            else
+                            {
+                                <img src="@FilePath" alt="blog-1">
+                            }
+                            <div class="course-text">
+                                <h3>@naira @course.Price</h3>
+                                <h3>@course.Title</h3>
+                                <p>Click to know more</p>
+                            </div>
+                        </div>
+                    }
+                    _count++;
+                }
+            </div>
+        </section>
+    }
+}
+
+
+
+<Footer/>
+
+@code {
+    private List<Post> blogs = new List<Post>();
+    public string FilePath { get; set; } = "./img/user-2.png";
+    List<Post> Course = new List<Post>();
+    char naira = (char)8358;
+    protected override async Task OnInitializedAsync()
+    {
+        var _blogs = await postController.GetAllPostFromDb("blog");
+        blogs = (_blogs.OrderByDescending(x => x.Date)).ToList<Post>();
+
+        var _courses = await postController.GetAllPostFromDb("course");
+        Course = (_courses.OrderByDescending(x => x.Date)).ToList<Post>();
+    }
+    private void Explore()
+    {
+        navManager.NavigateTo("/blog");
+    }
+    private void ViewBlog(string blogId)
+    {
+        string userId = store.State().ActiveUser.User.Id;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            navManager.NavigateTo($"/comments/{blogId}");
+        }
+        else
+        {
+            store.LoginClick(true);
+        }
+    }
+    private void ShowCourse(string id)
+    {
+        string userId = store.State().ActiveUser.User.Id;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            navManager.NavigateTo($"/showcourse/{id}");
+        }
+        else
+        {
+            store.LoginClick(true);
+        }
+    }
+}
+
+
+

@@ -1,0 +1,136 @@
+﻿@page "/comments/{blogId}" 
+@inject IPostController postController
+@inject IStore store
+
+@if (blog.Id != "")
+{
+    <section class="comments">
+        <h1 class="heading">Comments <span>Section</span></h1>
+        <div class="row">
+            <div class="col-2">
+                @if (!string.IsNullOrEmpty(blog.Filepath))
+                {
+                    <div class="blog-img">
+                        <img class="img" src="@blog.Filepath" alt="blog-1">
+                    </div>
+                }
+                else
+                {
+                    <div class="blog-img">
+                        <img class="img" src="@FilePath" alt="blog-1">
+                    </div>
+                }                    
+            </div>
+            <div class="col-2">
+                <h3>@blog.Title</h3>
+                <p>
+                    @RenderHtml(blog.Body)
+                </p>
+                <div class="comment-box">
+                    <textarea @bind="CommentBody" class="box" placeholder="Add a comment to this post"/>
+                    <button class="btn" @onclick="AddComment">Add</button>
+                </div>
+                <div class="comment">
+                    <span>@allComments.Count comments</span>
+                    <hr>
+                    @if (allComments.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var comment in allComments)
+                            {
+                                <li>
+                                    <div>
+                                        @if (!string.IsNullOrEmpty(comment.Filepath))
+                                        {
+                                            <img src="@comment.Filepath" alt="course-img">
+                                        }
+                                        else
+                                        {
+                                            <img src="@FilePath" alt="course-img">
+                                        }
+                                        @if (@comment.Username.ToString().Length > 8)
+                                        {
+                                            <span>@comment.Username.Substring(0,8) ... &nbsp;</span>
+
+                                            <span>@comment.Date.ToString("dd MMM, yyyy"); @comment.Date.ToString("hh : mm : ss tt")</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@comment.Username.Substring(0,comment.Username.Length) &nbsp;</span>
+
+                                            <span>@comment.Date.ToString("dd MMM, yyyy"); @comment.Date.ToString("hh : mm : ss tt")</span>
+                                        }
+                                        &nbsp;
+                                    </div>
+                                    <p>@comment.Body</p>
+                                    <hr/>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p>No comment on this post yet. Kindly add a comment.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <p>Post not found, might have been removed or deleted permanently!</p>
+}
+
+@code{
+    [Parameter]
+    public string? blogId { get; set; }
+    public string CommentBody { get; set; } = string.Empty;
+    List<Comment> allComments = new List<Comment>();
+    public string FilePath { get; set; } = "./img/user-2.png";
+    Post blog = new Post();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(blogId))
+        {
+            var id = blogId.ToLower();
+            blog = await postController.GetPostFromDb(id, "blog");
+            allComments = (await postController.GetAllComments(blogId)).OrderByDescending(x => x.Date).ToList();
+        }
+    }
+    public MarkupString RenderHtml(string html)
+    {
+        MarkupString ms = new MarkupString(html);
+        return ms;
+    }
+    private void AddComment()
+    {
+        User user = store.State().ActiveUser.User;
+        if (!string.IsNullOrEmpty(user.Id))
+        {
+            if (!string.IsNullOrEmpty(blogId) && !string.IsNullOrEmpty(CommentBody))
+            {
+                var comment = new Comment()
+                    {
+                        Username = user.Username,
+                        PostId = blogId,
+                        Filepath = user.Filepath,
+                        Date = DateTime.Now,
+                        Id = Guid.NewGuid().ToString(),
+                        Body = CommentBody.ToLower()
+                    };
+                var isAdded = postController.AddComments(comment).Result;
+                if (isAdded)
+                {
+                    allComments.Add(comment);
+                    allComments = allComments.OrderByDescending(x => x.Date).ToList();
+                    this.CommentBody = string.Empty;
+                }
+            }
+        }
+        else
+        {
+            store.LoginClick(true);
+        }
+    }
+}

@@ -1,0 +1,81 @@
+﻿@page "/users"
+@inject IUserController userController
+@inject IStore store
+@implements IDisposable
+
+<section class="users">
+    <h1 class="heading">Registered <span>Users</span></h1>
+    <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>S / N</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Is Admin</th>
+                    <th>Image</th>
+                    @if (store.State().ActiveUser.User != null && store.State().ActiveUser.User.IsAdmin)
+                    {
+                        <th>Has Admin Acess</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@user.Username</td>
+                        <td>@user.Email</td>
+                        <td>@user.IsAdmin</td>
+                       @if (!string.IsNullOrEmpty(user.Filepath))
+                        {
+                            <td><img class="table-img" src="@user.Filepath" /></td>
+                        }
+                        else
+                        {
+                            <td><img class="table-img" src="@FilePath" /></td>
+                        }
+                        @if (store.State().ActiveUser.User != null && store.State().ActiveUser.User.IsAdmin)
+                        {
+                            @if (user.AllowAcess)
+                            {
+                                <td>
+                                    <input type="checkbox" checked />
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <input type="checkbox" @onchange="(() => GrantAcess(user))" />
+                                </td>
+                            }
+                        }
+                    </tr>
+                    count++;
+                }
+            </tbody>
+        </table>
+
+    </div>
+</section>
+
+@code{
+    private int count = 0;
+    List<User> users = new();
+    public string FilePath { get; set; } = "./img/user-2.png";
+    protected async override Task OnInitializedAsync()
+    {
+        users = await userController.ReadAllUsers();
+        store.AddStateChangedListeners(() => { StateHasChanged(); });
+    }
+    public void Dispose()
+    {
+        store.RemoveStateChangedListeners(() => { StateHasChanged(); });
+    }
+    private async void GrantAcess(User user)
+    {
+        user.AllowAcess = true;
+        await userController.AddUser(user);
+    }
+}

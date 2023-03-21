@@ -1,0 +1,123 @@
+﻿@page "/courses"
+@inject IPostController postController
+@inject IStore store
+@inject NavigationManager navManager
+@if (Course.Count == 0)
+{
+    <section class="courses" id="courses">
+        <h1 class="heading">Available <span>Courses</span></h1>
+        <div class="container">
+            <div class="box">
+                <img src="/img/image1.png" alt="course-img">
+                <div class="course-text">
+                    <h3>@naira 200</h3>
+                    <h3>Web Design</h3>
+                    <p>Basic to professional web Design</p>
+                </div>
+            </div>
+            <div class="box">
+                <img src="/img/image1.png" alt="course-img">
+                <div class="course-text">
+                    <h3>@naira 200</h3>
+                    <h3>Web Design</h3>
+                    <p>Basic to professional web Design</p>
+                </div>
+            </div>
+            <div class="box">
+                <img src="/img/image1.png" alt="course-img">
+                <div class="course-text">
+                    <h3>@naira 200</h3>
+                    <h3>Web Design</h3>
+                    <p>Basic to professional web Design</p>
+                </div>
+            </div>
+            <div class="box">
+                <img src="/img/image1.png" alt="course-img">
+                <div class="course-text">
+                    <h3>@naira 200</h3>
+                    <h3>Web Design</h3>
+                    <p>Basic to professional web Design</p>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="courses" id="courses">
+        <h1 class="heading">Available <span>Courses</span></h1>
+        <div class="container">
+            @foreach (var course in Course)
+            {
+                <div class="box">
+                    @if (!string.IsNullOrEmpty(course.Filepath))
+                    {
+                        <img @onclick="(() => ShowCourse(course.Id))" src="@course.Filepath" alt="blog-1">
+                    }
+                    else
+                    {
+                        <img @onclick="(() => ShowCourse(course.Id))" src="@FilePath" alt="blog-1">
+                    }
+                    <div class="course-text">
+                        <h3>@naira @course.Price</h3>
+                        <h3>@course.Title</h3>
+                        <p @onclick="(() => ShowCourse(course.Id))">
+                            Click to know more 
+                        </p>
+                        @if (!string.IsNullOrEmpty(store.State().ActiveUser.User.Id) && store.State().ActiveUser.User.AllowAcess)
+                        {
+                            @if (confirmDel)
+                            {
+                                <p>confirm permanent delete <i @onclick="(() => DeletePost(course.Id))" class="fas fa-trash error"></i></p>
+                            }
+                            <span @onclick="(() => confirmDel =! confirmDel)">
+                                <i class="fas fa-trash"></i>
+                            </span>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
+
+@code{
+    List<Post> Course = new List<Post>();
+    public bool confirmDel { get; set; }
+    char naira = (char)8358;
+    public string FilePath { get; set; } = "./img/user-2.png";
+    protected async override Task OnInitializedAsync()
+    {
+        var course = await postController.GetAllPostFromDb("course");
+        Course = (course.OrderByDescending(x => x.Date)).ToList<Post>();
+    }
+    private void ShowCourse(string id)
+    {
+        string userId = store.State().ActiveUser.User.Id;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            navManager.NavigateTo($"/showcourse/{id}");
+        }
+        else
+        {
+            store.LoginClick(true);
+        }
+    }
+    private async void DeletePost(string id)
+    {
+        var isDel = await postController.DeletePost(id, "course");
+        if (isDel)
+        {
+            var _courses = Course.Where(x => x.Id != id);
+            if (_courses != null)
+            {
+                Course = _courses.ToList<Post>();
+            }
+            else
+            {
+                Course = new List<Post>();
+            }
+            confirmDel = false;
+        }
+    }
+}

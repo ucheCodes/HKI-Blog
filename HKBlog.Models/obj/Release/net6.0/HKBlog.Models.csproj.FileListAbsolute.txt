@@ -1,0 +1,12 @@
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\bin\Release\net6.0\HKBlog.Models.deps.json
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\bin\Release\net6.0\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\bin\Release\net6.0\HKBlog.Models.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.csproj.AssemblyReference.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.AssemblyInfoInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.AssemblyInfo.cs
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.csproj.CoreCompileInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\refint\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\HKBlog.Models.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Models\obj\Release\net6.0\ref\HKBlog.Models.dll

@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "HKBlog.States/1.0.0": {
+        "dependencies": {
+          "HKBlog.Models": "1.0.0"
+        },
+        "runtime": {
+          "HKBlog.States.dll": {}
+        }
+      },
+      "HKBlog.Models/1.0.0": {
+        "runtime": {
+          "HKBlog.Models.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "HKBlog.States/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "HKBlog.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

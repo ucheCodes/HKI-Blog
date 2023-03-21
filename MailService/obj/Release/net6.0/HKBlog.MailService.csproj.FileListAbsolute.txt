@@ -1,0 +1,12 @@
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\HKBlog.MailService.deps.json
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\HKBlog.MailService.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\bin\Release\net6.0\HKBlog.MailService.pdb
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.csproj.AssemblyReference.cache
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.AssemblyInfoInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.AssemblyInfo.cs
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.csproj.CoreCompileInputs.cache
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\refint\HKBlog.MailService.dll
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\HKBlog.MailService.pdb
+C:\Users\peter soft\source\repos\HKBlog\MailService\obj\Release\net6.0\ref\HKBlog.MailService.dll

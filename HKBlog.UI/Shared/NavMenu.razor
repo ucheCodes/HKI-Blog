@@ -1,0 +1,166 @@
+﻿@inject IStore store
+@inject NavigationManager navigationManager
+
+<header class="header">
+    @if (!string.IsNullOrEmpty(store.State().ActiveUser.User.Id))
+    {
+        var u = store.State().ActiveUser.User;
+        <div class="user-info">
+            @if (!string.IsNullOrEmpty(u.Filepath))
+            {
+                <img class="table-img" src="@u.Filepath" />
+            }
+            else
+            {
+                <img class="table-img" src="./img/user-2.png" />
+            }
+            <div>
+                @if (@u.Username.ToString().Length > 8)
+                {
+                    <p>@u.Username.ToString().Substring(0,8) ...</p>
+                }
+                else
+                {
+                   <p>@u.Username.ToString().Substring(0,u.Username.Length)</p>
+                }
+                <em class="online">online</em>
+            </div>
+        </div>
+    }
+    else{
+        <span class="logo"><i class="fa-solid fa-gavel"></i>HKI</span>
+    }
+
+    <nav @onclick="ToggleOff" class="@navbarClass">
+        <NavLink class="nav-link" href="" Match="NavLinkMatch.All"> Home</NavLink>
+        <NavLink class="nav-link" href="blog"> Blogs </NavLink>
+        <NavLink class="nav-link" href="courses"> Courses </NavLink>
+        @if (!string.IsNullOrEmpty(store.State().ActiveUser.User.Id) && store.State().ActiveUser.User.AllowAcess)
+        {
+            <NavLink class="nav-link" href="upload">Upload</NavLink>
+            <NavLink class="nav-link" href="users"> Users</NavLink>
+        }
+    </nav>
+
+    <div class="icon">
+        <div class="fa-solid fa-blog" id="blog-btn" @onclick="gotoBlog"></div>
+        <div class="fas fa-search" id="search-btn" @onclick="Search"></div>
+        <div class="fas fa-user" id="login-btn" @onclick="ToggleLoginForms"></div>
+        <div class="fas fa-bars" id="menu-btn" @onclick="ToggleNavbar"></div>
+    </div>
+
+    <div class="@searchFormClass">
+        <SearchForm/>
+    </div>
+    <div class="@loginFormClass">
+        <div @onclick="(()=> showLoginForm = false)" class="close">x</div>
+        <LoginForm />
+        <p> Already have an account? <span @onclick="ToggleToSignupForm" id="goto-signup">login now</span></p>
+    </div>
+    <form class="@signupFormClass">
+        <div @onclick="close" class="close">x</div>
+        <SignupForm />
+        <p>don't have an account <span @onclick="ToggleToLoginForm" id="goto-login">create now</span></p>
+    </form>
+</header>
+
+@code {
+    private bool showSearchForm = false;
+    private string searchFormClass => showSearchForm ? "search-form active" : "search-form";
+
+    private bool showNavbar = false;
+    private string navbarClass => showNavbar ? "navbar active" : "navbar";
+
+    private bool showLoginForm = false;
+    private bool showSignupForm = false;
+
+    private string loginFormClass => showLoginForm ? "login-form login active" : "login-form login";
+    private string signupFormClass => store.State().LoginClicker.IsClicked ? "login-form sign-up active" : "login-form sign-up";
+
+    private bool showLogin { get; set; } = false;
+    protected override void OnInitialized()
+    {
+        store.AddStateChangedListeners(() => { updateChange(); });
+    }
+    public void Dispose()
+    {
+        store.RemoveStateChangedListeners(() => { updateChange(); });
+    }
+    private void updateChange()
+    {
+        if (!store.State().LoginClicker.IsClicked)
+        {
+            this.showSignupForm = false; 
+        }
+        StateHasChanged();
+    }
+    private void ToggleToLoginForm()
+    {
+        showLoginForm = true;
+        showSignupForm = false;
+
+        store.LoginClick(showSignupForm);
+    }
+    private void ToggleLoginForms()
+    {
+        //showLoginForm = !showLoginForm;
+        //showSignupForm = false;
+        //showSearchForm = false;
+        //showNavbar = false;
+
+
+        showSignupForm = !showSignupForm;
+        showLoginForm = false;
+        showSearchForm = false;
+        showNavbar = false;
+        store.LoginClick(showSignupForm);
+    }
+    private void close()
+    {
+        store.LoginClick(false);
+    }
+    private void ToggleToSignupForm()
+    {
+        //showLoginForm = false;
+        //showSignupForm = true;
+        showLoginForm = false;
+        showSignupForm = true;
+        store.LoginClick(showSignupForm);
+    }
+
+    private void ToggleNavbar()
+    {
+        showNavbar = !showNavbar;
+
+        showLoginForm = false;
+        showSignupForm = false;
+        showSearchForm = false;
+
+        store.LoginClick(showSignupForm);
+    }
+    private void ToggleOff()
+    {
+        showLoginForm = false;
+        showSignupForm = false;
+        showSearchForm = false;
+        showNavbar = false;
+
+        store.LoginClick(showSignupForm);
+    }
+
+
+    private void Search()
+    {
+        showSearchForm = !showSearchForm;
+
+        showLoginForm = false;
+        showSignupForm = false;
+        showNavbar = false;
+
+        store.LoginClick(showSignupForm);
+    }
+    private void gotoBlog()
+    {
+        navigationManager.NavigateTo("/blog");
+    }
+}

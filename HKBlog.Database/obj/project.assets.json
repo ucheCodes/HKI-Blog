@@ -1,0 +1,139 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0": {
+      "DBreeze/1.107.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/DBreeze.dll": {
+            "related": ".XML"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/DBreeze.dll": {
+            "related": ".XML"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "DBreeze/1.107.0": {
+      "sha512": "yyay0tv6tEaUV0ReZP1kkVOYPywk0/DwTHVztwLW4vcfhdCY1MlXPu5u56wE3nNa9ALrbbTJ24zPHHMfRzRIlQ==",
+      "type": "package",
+      "path": "dbreeze/1.107.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.txt",
+        "dbreeze.1.107.0.nupkg.sha512",
+        "dbreeze.nuspec",
+        "images/Dbreeze.Logo.png",
+        "lib/net35/DBreeze.XML",
+        "lib/net35/DBreeze.dll",
+        "lib/net40/DBreeze.XML",
+        "lib/net40/DBreeze.dll",
+        "lib/net45/DBreeze.XML",
+        "lib/net45/DBreeze.dll",
+        "lib/net461/DBreeze.XML",
+        "lib/net461/DBreeze.dll",
+        "lib/net462/DBreeze.XML",
+        "lib/net462/DBreeze.dll",
+        "lib/net47/DBreeze.XML",
+        "lib/net47/DBreeze.dll",
+        "lib/net472/DBreeze.XML",
+        "lib/net472/DBreeze.dll",
+        "lib/net6.0/DBreeze.XML",
+        "lib/net6.0/DBreeze.dll",
+        "lib/netcoreapp1.0/DBreeze.XML",
+        "lib/netcoreapp1.0/DBreeze.dll",
+        "lib/netcoreapp1.1/DBreeze.XML",
+        "lib/netcoreapp1.1/DBreeze.dll",
+        "lib/netcoreapp2.0/DBreeze.XML",
+        "lib/netcoreapp2.0/DBreeze.dll",
+        "lib/netstandard1.6/DBreeze.XML",
+        "lib/netstandard1.6/DBreeze.dll",
+        "lib/netstandard2.0/DBreeze.XML",
+        "lib/netstandard2.0/DBreeze.dll",
+        "lib/netstandard2.1/DBreeze.XML",
+        "lib/netstandard2.1/DBreeze.dll",
+        "lib/portable-net45+win8+wp8+wpa81/DBreeze.XML",
+        "lib/portable-net45+win8+wp8+wpa81/DBreeze.dll"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0": [
+      "DBreeze >= 1.107.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\peter soft\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\peter soft\\source\\repos\\HKBlog\\HKBlog.Database\\HKBlog.Database.csproj",
+      "projectName": "HKBlog.Database",
+      "projectPath": "C:\\Users\\peter soft\\source\\repos\\HKBlog\\HKBlog.Database\\HKBlog.Database.csproj",
+      "packagesPath": "C:\\Users\\peter soft\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\peter soft\\source\\repos\\HKBlog\\HKBlog.Database\\obj\\",
+      "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\peter soft\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0": {
+        "targetAlias": "net6.0",
+        "dependencies": {
+          "DBreeze": {
+            "target": "Package",
+            "version": "[1.107.0, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.405\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

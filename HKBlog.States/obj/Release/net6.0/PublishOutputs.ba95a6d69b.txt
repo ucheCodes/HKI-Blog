@@ -1,0 +1,5 @@
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\publish\HKBlog.States.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\publish\HKBlog.States.deps.json
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\publish\HKBlog.States.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\publish\HKBlog.Models.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.States\bin\Release\net6.0\publish\HKBlog.Models.pdb

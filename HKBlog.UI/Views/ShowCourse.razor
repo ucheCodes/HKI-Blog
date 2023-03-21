@@ -1,0 +1,54 @@
+﻿@page "/showcourse/{Id}"
+@inject IPostController postController
+@inject IStore store
+
+@if (course.Id != "")
+{
+    <section class="courses">
+        <h1 class="heading">Selected <span>Course</span></h1>
+        <div class="row">
+            <div class="col-2">
+                @if (!string.IsNullOrEmpty(course.Filepath))
+                {
+                    <img class="img" src="@course.Filepath" alt="blog-1">
+                }
+                else
+                {
+                    <img class="img" src="@FilePath" alt="blog-1">
+                }
+            </div>
+            <div class="col-2">
+                <h3>@course.Title</h3>
+                <p>@naira @course.Price</p>
+                <p>
+                    @RenderHtml(course.Body)
+                </p>
+             </div>
+        </div>
+    </section>
+}
+else
+{
+    <p>Post not found, might have been removed or deleted permanently!</p>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+    char naira = (char)8358;
+    public string FilePath { get; set; } = "./img/user-2.png";
+    Post course = new Post();
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(Id))
+        {
+            var id = Id.ToLower();
+            course = await postController.GetPostFromDb(id, "course");
+        }
+    }
+    public MarkupString RenderHtml(string html)
+    {
+        MarkupString ms = new MarkupString(html);
+        return ms;
+    }
+}

@@ -1,0 +1,4 @@
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Database\bin\Release\net6.0\publish\HKBlog.Database.dll
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Database\bin\Release\net6.0\publish\HKBlog.Database.deps.json
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Database\bin\Release\net6.0\publish\HKBlog.Database.pdb
+C:\Users\peter soft\source\repos\HKBlog\HKBlog.Database\bin\Release\net6.0\publish\DBreeze.dll

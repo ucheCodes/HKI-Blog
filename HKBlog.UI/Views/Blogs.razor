@@ -1,0 +1,190 @@
+﻿@page "/blog"
+@inject IPostController postController
+@inject IStore store
+@inject NavigationManager navigationManager
+@if (blogs.Count == 0)
+{
+    <section class="blogs" id="blogs">
+        <h1 class="heading"> blog <span>posts</span></h1>
+        <div class="box-container">
+            <div class="box">
+                <div class="icons">
+                    <span><i class="fas fa-calendar"></i>1st Oct,2023</span>
+                    <span><i class="fas fa-clock"></i>1:09 pm</span>
+                    <span><i class="fas fa-trash"></i></span>
+                </div>
+                <img src="/img/image1.png" alt="blog-1">
+                <div class="content">
+                    <div class="icons">
+                        <span><i class="fa-solid fa-thumbs-up"></i>203</span>
+                        <span><i class="fa-solid fa-message"></i>14</span>
+                    </div>
+                    <h3>Blog Title</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt quasi doloribus sint nam dolore sit porro
+                        maxime tempore beatae.
+                    </p>
+                    <button class="btn">Read More</button>
+                </div>
+            </div>
+            <div class="box">
+                <div class="icons">
+                    <span><i class="fas fa-calendar"></i>1st Oct,2023</span>
+                    <span><i class="fas fa-clock"></i>1:09 pm</span>
+                </div>
+                <img src="img/image1.png" alt="blog-1">
+                <div class="content">
+                    <div class="icons">
+                        <span><i class="fa-solid fa-thumbs-up"></i>203</span>
+                        <span><i class="fa-solid fa-message"></i>14</span>
+                    </div>
+                    <h3>Blog Title</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt quasi doloribus sint nam dolore sit porro
+                        maxime tempore beatae.
+                    </p>
+                    <button class="btn">Read More</button>
+                </div>
+            </div>
+            <div class="box">
+                <div class="icons">
+                    <span><i class="fas fa-calendar"></i>1st Oct,2023</span>
+                    <span><i class="fas fa-clock"></i>1:09 pm</span>
+                </div>
+                <img src="/img/image1.png" alt="blog-1">
+                <div class="content">
+                    <div class="icons">
+                        <span><i class="fa-solid fa-thumbs-up"></i>203</span>
+                        <span><i class="fa-solid fa-message"></i>14</span>
+                    </div>
+                    <h3>Blog Title</h3>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nesciunt quasi doloribus sint nam dolore sit porro
+                        maxime tempore beatae.
+                    </p>
+                    <button class="btn">Read More</button>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="blogs" id="blogs">
+        <h1 class="heading"> blog <span>posts</span></h1>
+        <div class="box-container">
+            @foreach (var blog in blogs)
+            {
+                int count = postController.GetAllLikes(blog.Id).Result;
+                int commentCount = postController.GetAllComments(blog.Id).Result.Count();
+                LikesCountPerBlogPost[blog.Id] = count;
+                <div class="box">
+                    @if (confirmDel)
+                    {
+                        <p>confirm permanent delete <i @onclick="(() => DeletePost(blog.Id))" class="fas fa-trash error"></i></p>
+                    }
+                    <div class="icons">
+                        <span><i class="fas fa-calendar"></i>@blog.Date.ToString("dd MMM yyyy")</span>
+                        <span><i class="fas fa-clock"></i>@blog.Date.ToString("hh : mm : ss tt")</span>
+                        @if (!string.IsNullOrEmpty(store.State().ActiveUser.User.Id) && store.State().ActiveUser.User.AllowAcess)
+                        {
+                            <span @onclick="(() => confirmDel =! confirmDel)"><i class="fas fa-trash"></i></span>
+                        }
+                    </div>
+                    @if (!string.IsNullOrEmpty(blog.Filepath))
+                    {
+                        <div class="blog-img">
+                            <img src="@blog.Filepath" alt="blog-1">
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="blog-img">
+                            <img src="@FilePath" alt="blog-1">
+                        </div>
+                    }
+                    <div class="content">
+                        <div class="icons">
+                            <span @onclick="(() => AddLike(blog.Id))"><i class="fa-solid fa-thumbs-up"></i>@LikesCountPerBlogPost[blog.Id]</span>
+                            <span @onclick="(() => ViewBlog(blog.Id))"><i class="fa-solid fa-message"></i>@commentCount</span>
+                        </div>
+                        <h3>@blog.Title</h3>
+                        <button @onclick="(() => ViewBlog(blog.Id))" class="btn">Read</button>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </section>
+}
+@code{
+    private List<Post> blogs = new List<Post>();  
+    bool confirmDel = false;
+    public string FilePath { get; set; } = "./img/user-2.png";
+    private Dictionary<string, int> LikesCountPerBlogPost = new Dictionary<string, int>();
+    protected async override Task OnInitializedAsync()
+    {
+        var _blogs = await postController.GetAllPostFromDb("blog");
+        blogs = (_blogs.OrderByDescending(x => x.Date)).ToList<Post>();
+        store.AddStateChangedListeners(() => { StateHasChanged(); });
+    }
+    public RenderFragment RenderStringToHTML(string htmlString)
+    {
+        return builder =>
+        {
+            builder.AddContent(1, htmlString);
+
+        };
+    }
+    public MarkupString RenderHtml(string html)
+    {
+        return (MarkupString)html;
+    }
+    private async void DeletePost(string id)
+    {
+        var isDel = await postController.DeletePost(id, "blog");
+        if (isDel)
+        {
+            var _blogs = blogs.Where(x => x.Id != id);
+            if (_blogs != null)
+            {
+                blogs = _blogs.ToList<Post>();
+            }
+            else
+            {
+                blogs = new List<Post>();
+            }
+            confirmDel = false;
+        }
+    }
+    private void AddLike(string blogId)
+    {
+        string userId = store.State().ActiveUser.User.Id;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            bool isExist =  postController.DoesUserLikeOnPostExist(blogId, userId).Result;
+            if (!isExist)
+            {
+                postController.AddLikes(blogId, userId);
+                var count = LikesCountPerBlogPost[blogId];
+                LikesCountPerBlogPost[blogId] = count;
+            }
+        }
+        else
+        {
+            store.LoginClick(true);//let users login
+        }
+    }
+    private void ViewBlog(string blogId)
+    {
+        string userId = store.State().ActiveUser.User.Id;
+        if (!string.IsNullOrEmpty(userId))
+        {
+            navigationManager.NavigateTo($"/comments/{blogId}");
+        }
+        else
+        {
+            store.LoginClick(true);
+        }
+    }
+}
